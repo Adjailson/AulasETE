@@ -1,9 +1,10 @@
+#version-0.0.3
 import tkinter as tk
 from tkinter import ttk, messagebox
 
 class Janela:
 
-    estilos = {'font':('Arial',14)}
+    __estilo = {'font':('Arial',14)}
     __arrayObjetos = [tk.Button]
 
     def __init__(self):
@@ -12,20 +13,6 @@ class Janela:
     def start(self):
         return self.janela.mainloop()
 
-    '''
-    @objetos passar um vetor bi-dimensional com as devidas regras;
-    @master é o frame aonde os objetos vão ser inseridos;
-    Regras: a posição no vetor também será a posição do grid,
-    Se receber String isso gera uma Label com a informação da String;
-    Ex.: 'Nome:' => Label(text='Nome:')
-    Se receber *String isso gera um Button com a informação depois do *;
-    Ex.: '*Salvar' => Button(text='Salvar')
-    Se receber uma tuple isso gera um Combobox com os itens declarados;
-    Ex.: ('João','Maria','Paulo') => Combobox(values=['João','Maria','Paulo'])
-    Se receber input isso gera um Entry, entrada de texto;
-    Ex.: input => Entry()
-    Se receber None nenhum objeto deve ficar naquele espaço e nem no grid;
-    '''
     def gerar(self,objetos):
         frame = tk.Frame(self.janela)
         for l in range(len(objetos)):
@@ -33,24 +20,24 @@ class Janela:
                 oQueE = objetos[l][c]
                 if(oQueE == input):#Campo de texto
                     campo = tk.Entry(frame)
-                    campo.config(self.estilos)
+                    campo.config(self.__estilo)
                     campo.grid(row=l,column=c)
                     self.__arrayObjetos.append(campo)
                 if(oQueE == complex):#Campo de senha
                     senha = tk.Entry(frame,show="*")
-                    senha.config(self.estilos)
+                    senha.config(self.__estilo)
                     senha.grid(row=l,column=c)
                     self.__arrayObjetos.append(senha)
                 if(type(oQueE) == str):#Achei Label ou Button
                     if("*" in oQueE):#Botao
                         btn = tk.Button(frame,
                                         text=oQueE[1:len(oQueE)])
-                        btn.config(self.estilos)
+                        btn.config(self.__estilo)
                         btn.grid(row=l,column=c)
                         self.__arrayObjetos.append(btn)
                     if(not("*" in oQueE)):#Label
                         label = tk.Label(frame,text=oQueE)
-                        label.config(self.estilos)
+                        label.config(self.__estilo)
                         label.grid(row=l,column=c)
                         self.__arrayObjetos.append(label)
                         
@@ -73,13 +60,13 @@ class Janela:
         elif(tipo == 2):
             messagebox.showerror("Tkfull",msg)
             
-    def pergunta(self,msg,tipo=None):
+    def pergunta(self,msg):
         YesNo = messagebox.askyesno("Tkfull",msg)
         if YesNo:
             return True
         return False
     
-    def aplicarEvento(self,posicao,funcao):
+    def setEvento(self,posicao,funcao):
         if(type(self.__arrayObjetos[posicao]) == tk.Button):
             for b in self.__arrayObjetos:
                 if(b == self.__arrayObjetos[posicao]):
@@ -98,6 +85,9 @@ class Janela:
             self.__arrayObjetos[posicao]['text'] = texto
         elif(type(self.__arrayObjetos[posicao]) == ttk.Combobox):
             pass
+
+    def setEstilo(self, posicao, estilo):
+        self.__arrayObjetos[posicao].config(estilo)
     
     def getTexto(self,posicao):
         try:
@@ -125,9 +115,6 @@ class Janela:
             elif(acao == 1):
                 tamanho = len(self.getTexto(posicao))
                 self.__arrayObjetos[posicao].delete(tamanho-1,tk.END)
-
-    def setEstilo(self, posicao, estilo=""):
-        self.__arrayObjetos[posicao].config(estilo)
 
     def getObjetos(self):
         return self.__arrayObjetos
